@@ -10,12 +10,17 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
 
+    public static final String URL = "https://api.flickr.com/services/feeds/photos_public.gne?format=json&nojsoncallback=1";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        GetRawData getRawData = new GetRawData();
+        getRawData.execute(URL);
     }
 
     @Override
