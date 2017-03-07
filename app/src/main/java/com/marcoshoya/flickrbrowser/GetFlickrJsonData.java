@@ -1,6 +1,7 @@
 package com.marcoshoya.flickrbrowser;
 
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -36,7 +37,7 @@ class GetFlickrJsonData implements GetRawData.OnDownloadComplete {
         this.callback = callback;
     }
 
-    private void executeThread(String criteria) {
+    protected void executeThread(String criteria) {
         String url = createUrl(criteria, language, matchAll);
 
         GetRawData rawData = new GetRawData(this);
