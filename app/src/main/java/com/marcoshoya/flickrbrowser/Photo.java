@@ -17,7 +17,7 @@ class Photo {
 
     private String image;
 
-    public Photo(String title, String author, String authorId, String link, String tags, String image) {
+    public Photo(String title, String author, String authorId, String tags, String link, String image) {
         this.title = title;
         this.author = author;
         this.authorId = authorId;
