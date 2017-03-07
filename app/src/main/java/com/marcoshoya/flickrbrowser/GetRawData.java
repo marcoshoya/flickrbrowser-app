@@ -19,18 +19,24 @@ enum DownloadStatus { IDLE, PROCESSING, WAITING, FAILED, OK}
 class GetRawData extends AsyncTask<String, Void, String> {
 
     private static final String TAG = "GetRawData";
-
     private DownloadStatus downloadStatus;
+    private final OnDownloadComplete callback;
 
-    public GetRawData() {
+    interface OnDownloadComplete {
+        void onDownloadComplete(String data, DownloadStatus status);
+    }
+
+    public GetRawData(OnDownloadComplete callback) {
         this.downloadStatus = DownloadStatus.IDLE;
+        this.callback = callback;
     }
 
     @Override
     protected void onPostExecute(String s) {
         //super.onPostExecute(s);
-
-
+        if (callback != null) {
+            callback.onDownloadComplete(s, downloadStatus);
+        }
     }
 
     @Override
