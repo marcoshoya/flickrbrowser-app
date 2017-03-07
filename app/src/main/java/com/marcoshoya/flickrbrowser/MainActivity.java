@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity implements GetFlickrJsonData
         super.onResume();
 
         GetFlickrJsonData getFlickrJsonData = new GetFlickrJsonData(this, "https://api.flickr.com/services/feeds/photos_public.gne", "en-use", true);
-        getFlickrJsonData.executeThread("android, nougat");
+        getFlickrJsonData.execute("android, nougat");
     }
 
     @Override
@@ -58,6 +58,6 @@ public class MainActivity extends AppCompatActivity implements GetFlickrJsonData
 
     @Override
     public void onDataAvailable(List<Photo> data , DownloadStatus status) {
-        Log.d(TAG, "onDownloadComplete: status: " + status);
+        Log.d(TAG, "onDataAvailable: status: " + status);
     }
 }

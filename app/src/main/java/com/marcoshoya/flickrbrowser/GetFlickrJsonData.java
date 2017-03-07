@@ -16,7 +16,7 @@ import java.util.List;
  * Created by dc-user on 3/7/2017.
  */
 
-class GetFlickrJsonData implements GetRawData.OnDownloadComplete {
+class GetFlickrJsonData extends AsyncTask<String, Void, List<Photo>> implements GetRawData.OnDownloadComplete {
 
     private static final String TAG = "GetFlickrJsonData";
 
@@ -25,6 +25,7 @@ class GetFlickrJsonData implements GetRawData.OnDownloadComplete {
     private String language;
     private boolean matchAll;
     private final OnDataAvailable callback;
+    private boolean runningOnSameThread = false;
 
     interface OnDataAvailable {
         void onDataAvailable(List<Photo> data, DownloadStatus status);
@@ -38,10 +39,31 @@ class GetFlickrJsonData implements GetRawData.OnDownloadComplete {
     }
 
     protected void executeThread(String criteria) {
-        String url = createUrl(criteria, language, matchAll);
+        this.runningOnSameThread = true;
 
+        String url = createUrl(criteria, language, matchAll);
         GetRawData rawData = new GetRawData(this);
         rawData.execute(url);
+    }
+
+    @Override
+    protected void onPostExecute(List<Photo> photos) {
+
+        if (callback != null) {
+            callback.onDataAvailable(photoList, DownloadStatus.OK);
+        }
+
+    }
+
+    @Override
+    protected List<Photo> doInBackground(String... params) {
+        Log.d(TAG, "doInBackground: starts");
+
+        String url = createUrl(params[0], language, matchAll);
+        GetRawData getRawData = new GetRawData(this);
+        getRawData.runThread(url);
+
+        return photoList;
     }
 
     private String createUrl(String criteria, String language, boolean matchAll) {
@@ -92,9 +114,10 @@ class GetFlickrJsonData implements GetRawData.OnDownloadComplete {
             }
         }
 
-        if (callback != null) {
+        if (runningOnSameThread && callback != null) {
             callback.onDataAvailable(photoList, status);
         }
-
     }
+
+
 }

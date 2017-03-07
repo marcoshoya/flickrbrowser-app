@@ -31,9 +31,18 @@ class GetRawData extends AsyncTask<String, Void, String> {
         this.callback = callback;
     }
 
+    void runThread(String s) {
+        Log.d(TAG, "runThread: start");
+
+        onPostExecute(doInBackground(s));
+
+        Log.d(TAG, "runThread: end");
+    }
+
+
     @Override
     protected void onPostExecute(String s) {
-        //super.onPostExecute(s);
+
         if (callback != null) {
             callback.onDownloadComplete(s, downloadStatus);
         }
