@@ -3,12 +3,17 @@ package com.marcoshoya.flickrbrowser;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class MainActivity extends AppCompatActivity {
+import java.util.List;
+
+public class MainActivity extends AppCompatActivity implements GetFlickrJsonData.OnDataAvailable {
 
     private static final String TAG = "MainActivity";
+
+    public static final String URL = "https://api.flickr.com/services/feeds/photos_public.gne?format=json&nojsoncallback=1";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -16,6 +21,17 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        //GetRawData getRawData = new GetRawData(this);
+        //getRawData.execute(URL);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        GetFlickrJsonData getFlickrJsonData = new GetFlickrJsonData(this, "https://api.flickr.com/services/feeds/photos_public.gne", "en-use", true);
+        getFlickrJsonData.execute("android, nougat");
     }
 
     @Override
@@ -38,5 +54,10 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onDataAvailable(List<Photo> data , DownloadStatus status) {
+        Log.d(TAG, "onDataAvailable: status: " + status);
     }
 }
